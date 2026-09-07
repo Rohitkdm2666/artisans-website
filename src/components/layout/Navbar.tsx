@@ -10,27 +10,21 @@ const CUSTOMER_NAV = [
 ]
 
 const BUSINESS_NAV = [
-  { label: 'Dashboard', href: '/business' },
-  { label: 'Products',  href: '/business/products' },
-  { label: 'Requests',  href: '/business/requests' },
-  { label: 'Orders',    href: '/business/orders' },
+  { label: 'Products / Bulk Sourcing', href: '/business/products' },
+  { label: 'My Requests',              href: '/business/requests' },
+  { label: 'My Orders',                href: '/business/orders' },
 ]
 
 export function Navbar() {
   const [mobileOpen,   setMobileOpen]   = React.useState(false)
-  const [businessOpen, setBusinessOpen] = React.useState(false)
   const [userMenuOpen, setUserMenuOpen] = React.useState(false)
   const location = useLocation()
   const navigate  = useNavigate()
 
   const { user, profile, authLoading, signOut } = useAuth()
 
-  const isBusinessSection = location.pathname.startsWith('/business')
-  const isArtisanSection  = location.pathname.startsWith('/artisan')
-
   React.useEffect(() => {
     setMobileOpen(false)
-    setBusinessOpen(false)
     setUserMenuOpen(false)
   }, [location.pathname])
 
@@ -45,6 +39,40 @@ export function Navbar() {
   // Initial for avatar circle
   const initial = displayName.charAt(0).toUpperCase()
 
+  const isCustomerOrGuest = !profile || profile.role === 'customer'
+  const isBusiness = profile?.role === 'business'
+  const isAdmin = profile?.role === 'admin'
+
+  const showCustomerNav = isCustomerOrGuest || isAdmin
+  const showBusinessNav = isBusiness || isAdmin
+
+  // Helper for NavLink styling
+  const getDesktopNavLinkStyle = (isActive: boolean) => ({
+    fontFamily:    'var(--font-sans)',
+    fontSize:      'var(--font-size-sm)',
+    letterSpacing: '0.04em',
+    textTransform: 'uppercase' as const,
+    fontWeight:    500,
+    color:         isActive ? 'var(--color-primary)' : 'var(--color-text-muted)',
+    textDecoration:'none',
+    borderBottom:  isActive ? '1px solid var(--color-primary)' : '1px solid transparent',
+    paddingBottom: '2px',
+    transition:    'color var(--duration-base) ease',
+  })
+
+  const getMobileNavLinkStyle = (isActive: boolean) => ({
+    padding:       '0.65rem 0.5rem',
+    fontFamily:    'var(--font-sans)',
+    fontSize:      'var(--font-size-sm)',
+    letterSpacing: '0.04em',
+    textTransform: 'uppercase' as const,
+    fontWeight:    500,
+    color:         isActive ? 'var(--color-primary)' : 'var(--color-text-base)',
+    textDecoration:'none',
+    borderBottom:  '1px solid var(--color-border)',
+    display:       'block',
+  })
+
   return (
     <header
       style={{
@@ -52,169 +80,31 @@ export function Navbar() {
         borderBottom:    '1px solid var(--color-border)',
       }}
     >
-      {/* Top announcement bar */}
-      <div
-        className="text-center py-2"
-        style={{
-          backgroundColor: 'var(--color-primary)',
-          color:           'var(--color-beige-100)',
-          fontSize:        'var(--font-size-xs)',
-          letterSpacing:   '0.06em',
-          fontFamily:      'var(--font-sans)',
-        }}
-      >
-        Handcrafted by artisans across India &nbsp;✦&nbsp; Direct from maker to you
-      </div>
-
       <nav>
         <Container className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link
             to="/"
-            className="flex flex-col leading-tight"
+            className="flex items-center leading-tight"
             style={{ textDecoration: 'none' }}
-            aria-label="Hastakala — Home"
+            aria-label="Dor — Home"
           >
-            <span
-              className="font-serif"
-              style={{
-                fontSize:      '1.6rem',
-                fontWeight:    600,
-                color:         'var(--color-primary)',
-                letterSpacing: '-0.02em',
-                lineHeight:    1,
-              }}
-            >
-              Hastakala
-            </span>
-            <span
-              style={{
-                fontSize:      '0.6rem',
-                color:         'var(--color-accent-muted)',
-                letterSpacing: '0.25em',
-                textTransform: 'uppercase',
-                fontFamily:    'var(--font-sans)',
-              }}
-            >
-              हस्तकला
-            </span>
+            <img src="/images/logo.png" alt="Dor Logo" className="h-12 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {CUSTOMER_NAV.map((item) => (
-              <NavLink
-                key={item.href}
-                to={item.href}
-                style={({ isActive }) => ({
-                  fontFamily:    'var(--font-sans)',
-                  fontSize:      'var(--font-size-sm)',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase' as const,
-                  fontWeight:    500,
-                  color:         isActive ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                  textDecoration:'none',
-                  borderBottom:  isActive ? '1px solid var(--color-primary)' : '1px solid transparent',
-                  paddingBottom: '2px',
-                  transition:    'color var(--duration-base) ease',
-                })}
-              >
+            {showCustomerNav && CUSTOMER_NAV.map((item) => (
+              <NavLink key={item.href} to={item.href} style={({ isActive }) => getDesktopNavLinkStyle(isActive)}>
                 {item.label}
               </NavLink>
             ))}
 
-            {/* Business dropdown trigger */}
-            <div className="relative">
-              <button
-                id="business-nav-trigger"
-                onClick={() => setBusinessOpen((v) => !v)}
-                className="flex items-center gap-1"
-                style={{
-                  fontFamily:    'var(--font-sans)',
-                  fontSize:      'var(--font-size-sm)',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                  fontWeight:    500,
-                  color:         isBusinessSection ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                  background:    'none',
-                  border:        'none',
-                  cursor:        'pointer',
-                  padding:       0,
-                }}
-                aria-expanded={businessOpen}
-                aria-haspopup="menu"
-              >
-                Business
-                <ChevronDown
-                  size={14}
-                  style={{
-                    transition: 'transform 200ms ease',
-                    transform:  businessOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                  }}
-                />
-              </button>
-
-              {businessOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-10"
-                    onClick={() => setBusinessOpen(false)}
-                    aria-hidden="true"
-                  />
-                  <div
-                    className="absolute left-0 top-full mt-2 z-20 flex flex-col gap-1 py-2 min-w-44"
-                    style={{
-                      backgroundColor: 'var(--color-bg-surface)',
-                      border:          '1px solid var(--color-border)',
-                      borderRadius:    'var(--radius-card)',
-                      boxShadow:       '0 4px 16px rgba(93,58,36,0.10)',
-                    }}
-                    role="menu"
-                  >
-                    {BUSINESS_NAV.map((item) => (
-                      <NavLink
-                        key={item.href}
-                        to={item.href}
-                        role="menuitem"
-                        style={({ isActive }) => ({
-                          padding:         '0.5rem 1rem',
-                          fontFamily:      'var(--font-sans)',
-                          fontSize:        'var(--font-size-sm)',
-                          color:           isActive ? 'var(--color-primary)' : 'var(--color-text-base)',
-                          textDecoration:  'none',
-                          backgroundColor: isActive ? 'var(--color-bg-muted)' : 'transparent',
-                          display:         'block',
-                          transition:      'background-color 150ms ease',
-                        })}
-                        onClick={() => setBusinessOpen(false)}
-                      >
-                        {item.label}
-                      </NavLink>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Artisan Portal link — only for artisans */}
-            {profile?.role === 'artisan' && (
-              <NavLink
-                to="/artisan"
-                style={({ isActive }) => ({
-                  fontFamily:    'var(--font-sans)',
-                  fontSize:      'var(--font-size-sm)',
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase' as const,
-                  fontWeight:    500,
-                  color:         isActive || isArtisanSection ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                  textDecoration:'none',
-                  borderBottom:  isActive || isArtisanSection ? '1px solid var(--color-primary)' : '1px solid transparent',
-                  paddingBottom: '2px',
-                })}
-              >
-                Artisan Portal
+            {showBusinessNav && BUSINESS_NAV.map((item) => (
+              <NavLink key={item.href} to={item.href} style={({ isActive }) => getDesktopNavLinkStyle(isActive)}>
+                {item.label}
               </NavLink>
-            )}
+            ))}
           </div>
 
           {/* Desktop Right Actions */}
@@ -395,7 +285,7 @@ export function Navbar() {
                 )}
               </div>
             ) : (
-              /* ── Logged-out state (unchanged visual design) ─── */
+              /* ── Logged-out state ─── */
               <>
                 <Link
                   to="/login"
@@ -446,59 +336,25 @@ export function Navbar() {
             }}
           >
             <Container className="py-4 flex flex-col gap-1">
-              {CUSTOMER_NAV.map((item) => (
+              {showCustomerNav && CUSTOMER_NAV.map((item) => (
                 <NavLink
                   key={item.href}
                   to={item.href}
-                  style={({ isActive }) => ({
-                    padding:       '0.65rem 0.5rem',
-                    fontFamily:    'var(--font-sans)',
-                    fontSize:      'var(--font-size-sm)',
-                    letterSpacing: '0.04em',
-                    textTransform: 'uppercase' as const,
-                    fontWeight:    500,
-                    color:         isActive ? 'var(--color-primary)' : 'var(--color-text-base)',
-                    textDecoration:'none',
-                    borderBottom:  '1px solid var(--color-border)',
-                    display:       'block',
-                  })}
+                  style={({ isActive }) => getMobileNavLinkStyle(isActive)}
                 >
                   {item.label}
                 </NavLink>
               ))}
 
-              <div
-                className="pt-2"
-                style={{ borderTop: '1px solid var(--color-border)', marginTop: '0.5rem' }}
-              >
-                <p
-                  style={{
-                    fontSize:      'var(--font-size-xs)',
-                    color:         'var(--color-text-light)',
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    marginBottom:  '0.5rem',
-                  }}
+              {showBusinessNav && BUSINESS_NAV.map((item) => (
+                <NavLink
+                  key={item.href}
+                  to={item.href}
+                  style={({ isActive }) => getMobileNavLinkStyle(isActive)}
                 >
-                  Business
-                </p>
-                {BUSINESS_NAV.map((item) => (
-                  <NavLink
-                    key={item.href}
-                    to={item.href}
-                    style={({ isActive }) => ({
-                      padding:       '0.5rem 0.5rem',
-                      fontFamily:    'var(--font-sans)',
-                      fontSize:      'var(--font-size-sm)',
-                      color:         isActive ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                      textDecoration:'none',
-                      display:       'block',
-                    })}
-                  >
-                    {item.label}
-                  </NavLink>
-                ))}
-              </div>
+                  {item.label}
+                </NavLink>
+              ))}
 
               {/* Mobile auth actions */}
               {authLoading ? null : user ? (

@@ -30,7 +30,7 @@ export function SectionHeading({
           style={{ color: 'var(--color-accent-muted)' }}
           aria-hidden="true"
         >
-          ✦ &nbsp; Hastakala &nbsp; ✦
+          ✦ &nbsp; Dor &nbsp; ✦
         </span>
       )}
       <TitleTag className="text-h2" style={{ color: 'var(--color-text-base)' }}>

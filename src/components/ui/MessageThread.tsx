@@ -54,14 +54,14 @@ export function MessageThread({ messages, currentUserId, onSendMessage }: Messag
             const isMe = msg.sender_user_id === currentUserId
             return (
               <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] rounded-lg p-3 ${isMe ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-900'}`}>
+                <div className={`max-w-[80%] rounded-lg p-3 ${isMe ? 'bg-maroon-700 text-white' : 'bg-gray-100 text-gray-900'}`}>
                   {!isMe && (
                     <div className="text-xs font-semibold text-gray-500 mb-1">
                       {msg.sender?.full_name || 'User'} ({msg.sender?.role || 'Unknown'})
                     </div>
                   )}
                   <div className="text-sm whitespace-pre-wrap">{msg.message}</div>
-                  <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-primary-200' : 'text-gray-400'}`}>
+                  <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-maroon-200' : 'text-gray-400'}`}>
                     {new Date(msg.created_at).toLocaleString()}
                   </div>
                 </div>

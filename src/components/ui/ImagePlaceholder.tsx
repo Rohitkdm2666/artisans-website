@@ -30,7 +30,7 @@ export function ImagePlaceholder({
 
   return (
     <div
-      className={`relative overflow-hidden ${className}`}
+      className={`relative block overflow-hidden ${className}`}
       style={{
         aspectRatio,
         backgroundColor: 'var(--color-bg-muted)',

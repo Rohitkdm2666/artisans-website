@@ -50,7 +50,7 @@ export async function getProducts(filters?: ProductFilters): Promise<ProductWith
   // Format the data to match ProductWithDetails
   return (data || []).map((item: any) => {
     // Find primary image
-    const images = item.product_images || []
+    const images = (item.product_images || []).sort((a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0))
     const primaryImage = images.find((img: any) => img.is_primary) || (images.length > 0 ? images[0] : undefined)
 
     // Ensure inventory is treated correctly
@@ -126,7 +126,7 @@ export async function getProductsByArtisanId(artisanProfileId: string): Promise<
   }
 
   return (data || []).map((item: any) => {
-    const images = item.product_images || []
+    const images = (item.product_images || []).sort((a: any, b: any) => (a.sort_order || 0) - (b.sort_order || 0))
     const primaryImage = images.find((img: any) => img.is_primary) || (images.length > 0 ? images[0] : undefined)
     const inventory = Array.isArray(item.inventory) ? item.inventory[0] : item.inventory
     const category = item.category || (Array.isArray(item.product_categories) ? item.product_categories[0] : item.product_categories)

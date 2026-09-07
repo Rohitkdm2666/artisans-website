@@ -53,7 +53,8 @@ export async function getBusinessBulkRequests(businessProfileId: string): Promis
       ),
       product:product_id (
         id,
-        name
+        name,
+        product_images(*)
       )
     `)
     .eq('business_profile_id', businessProfileId)
@@ -82,7 +83,7 @@ export async function getArtisanBulkRequests(artisanProfileId: string): Promise<
       product:product_id (
         id,
         name,
-        primary_image:product_images(thumbnail_path)
+        product_images(*)
       )
     `)
     .eq('artisan_profile_id', artisanProfileId)
@@ -115,7 +116,7 @@ export async function getBulkRequestById(id: string): Promise<BulkOrderRequest> 
       product:product_id (
         id,
         name,
-        primary_image:product_images(thumbnail_path)
+        product_images(*)
       )
     `)
     .eq('id', id)

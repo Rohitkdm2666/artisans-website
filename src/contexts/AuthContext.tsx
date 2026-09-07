@@ -10,7 +10,7 @@ import { supabase } from '@/lib/supabase'
 import type { Profile } from '@/types'
 
 // =====================================================
-// AUTH CONTEXT — Hastakala Indian Artisan Marketplace
+// AUTH CONTEXT — Dor Indian Artisan Marketplace
 //
 // Provides:
 //   user        — Supabase auth.User (JWT identity)

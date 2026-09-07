@@ -2,7 +2,7 @@ import { supabase } from '@/lib/supabase'
 
 // Assuming the bucket is named 'product-images' based on common conventions.
 // If it's different, this central helper makes it easy to update later.
-const PRODUCT_IMAGES_BUCKET = 'product-images'
+const PRODUCT_IMAGES_BUCKET = 'product-media'
 const ARTISAN_IMAGES_BUCKET = 'artisan-profiles'
 
 export function getProductImageUrl(path: string | null | undefined): string | undefined {

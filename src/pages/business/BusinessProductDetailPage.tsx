@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { ArrowLeft, AlertCircle, MapPin, Palette } from 'lucide-react'
 import { useProductDetail } from '@/hooks/useProducts'
 import { getProductImageUrl } from '@/lib/storage'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
 import { BulkRequestModal } from '@/components/business'
 import { useBulkRequests } from '@/hooks/useBulkRequests'
 import { useAuth } from '@/hooks/useAuth'
@@ -50,11 +51,13 @@ export default function BusinessProductDetailPage() {
   if (!product) return null
 
   const images = product.images && product.images.length > 0
-    ? product.images.map(img => getProductImageUrl(img.enhanced_path || img.original_path))
+    ? [...product.images]
+        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+        .map(img => getProductImageUrl(img.enhanced_path || img.original_path))
     : [getProductImageUrl(null)]
 
   return (
-    <div className="section bg-white min-h-screen">
+    <div className="section min-h-screen">
       <Container>
         <Link
           to="/business/products"
@@ -74,7 +77,7 @@ export default function BusinessProductDetailPage() {
           {/* Gallery */}
           <div className="flex flex-col gap-4">
             <div className="aspect-square bg-gray-100 relative overflow-hidden">
-              <img src={images[activeImageIndex]} alt={product.name} className="w-full h-full object-cover" />
+              <ImagePlaceholder src={images[activeImageIndex]} alt={product.name} className="w-full h-full" aspectRatio="1/1" />
             </div>
             {images.length > 1 && (
               <div className="flex gap-4 overflow-x-auto pb-2">
@@ -84,7 +87,7 @@ export default function BusinessProductDetailPage() {
                     onClick={() => setActiveImageIndex(idx)}
                     className={`w-20 h-20 flex-shrink-0 border-2 overflow-hidden ${activeImageIndex === idx ? 'border-maroon-700' : 'border-transparent'}`}
                   >
-                    <img src={imgUrl} alt={`${product.name} view ${idx + 1}`} className="w-full h-full object-cover" />
+                    <ImagePlaceholder src={imgUrl} alt={`${product.name} view ${idx + 1}`} className="w-full h-full" aspectRatio="1/1" />
                   </button>
                 ))}
               </div>

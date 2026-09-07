@@ -12,6 +12,7 @@ import { useBulkRequests } from '@/hooks/useBulkRequests'
 import { useBulkOrderMessages } from '@/hooks/useBulkOrderMessages'
 import { updateBulkRequest } from '@/services/bulkOrders'
 import { Package, ChevronLeft, X } from 'lucide-react'
+import { getProductImageUrl } from '@/lib/storage'
 import type { BulkOrderRequest } from '@/types'
 
 export default function ArtisanBulkRequestsPage() {
@@ -92,7 +93,23 @@ export default function ArtisanBulkRequestsPage() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <StatusBadge status={req.status} />
-                      <p className="font-medium text-gray-900 mt-1">{(req as any).product?.name || 'Custom Request'}</p>
+                      <div className="flex items-start gap-3 mt-2">
+                        {(() => {
+                          const product = (req as any).product;
+                          const images = product?.product_images || [];
+                          const primaryImage = images.find((img: any) => img.is_primary) || images[0];
+                          const imageUrl = primaryImage ? getProductImageUrl(primaryImage.thumbnail_path || primaryImage.original_path) : undefined;
+                          
+                          return imageUrl ? (
+                            <img src={imageUrl} alt={product.name} className="w-10 h-10 rounded object-cover border border-gray-200 shrink-0" />
+                          ) : (
+                            <div className="w-10 h-10 rounded bg-gray-50 border border-gray-100 shrink-0 flex items-center justify-center text-gray-400">
+                              <Package size={18} />
+                            </div>
+                          );
+                        })()}
+                        <p className="font-medium text-gray-900">{(req as any).product?.name || 'Custom Request'}</p>
+                      </div>
                       <p className="text-sm text-gray-500 mt-1">
                         Qty: <strong>{req.requested_quantity}</strong>
                         {req.requested_unit_price ? ` · ₹${req.requested_unit_price}/unit` : ''}

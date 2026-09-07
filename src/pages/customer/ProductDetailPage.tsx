@@ -1,17 +1,19 @@
 import { useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Container } from '@/components/ui/Container'
 import { LoadingState } from '@/components/ui/LoadingState'
 import { Button } from '@/components/ui/Button'
 import { ArrowLeft, AlertCircle, MapPin, Palette } from 'lucide-react'
 import { useProductDetail } from '@/hooks/useProducts'
 import { getProductImageUrl } from '@/lib/storage'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
 import { EnquiryModal } from '@/components/enquiries'
 import { useCustomerEnquiries } from '@/hooks/useCustomerEnquiries'
 import { useAuth } from '@/hooks/useAuth'
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const { product, status, error } = useProductDetail(id)
   const [activeImageIndex, setActiveImageIndex] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -45,7 +47,9 @@ export default function ProductDetailPage() {
   if (!product) return null
 
   const images = product.images && product.images.length > 0
-    ? product.images.map(img => getProductImageUrl(img.enhanced_path || img.original_path))
+    ? [...product.images]
+        .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0))
+        .map(img => getProductImageUrl(img.enhanced_path || img.original_path))
     : [getProductImageUrl(null)]
 
   const qty = product.inventory ? (product.inventory.quantity_on_hand - product.inventory.reserved_quantity) : 0
@@ -53,7 +57,7 @@ export default function ProductDetailPage() {
   const isLowStock = isAvailable && qty <= (product.inventory?.low_stock_threshold || 5)
 
   return (
-    <div className="section bg-white min-h-screen">
+    <div className="pt-6 pb-16 min-h-screen">
       <Container>
         <Link
           to="/products"
@@ -74,11 +78,7 @@ export default function ProductDetailPage() {
           {/* Gallery Area */}
           <div className="flex flex-col gap-4">
             <div className="aspect-square bg-gray-100 relative overflow-hidden">
-              <img
-                src={images[activeImageIndex]}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
+              <ImagePlaceholder src={images[activeImageIndex]} alt={product.name} className="w-full h-full" aspectRatio="1/1" />
             </div>
             {images.length > 1 && (
               <div className="flex gap-4 overflow-x-auto pb-2">
@@ -90,7 +90,7 @@ export default function ProductDetailPage() {
                       activeImageIndex === idx ? 'border-maroon-700' : 'border-transparent'
                     }`}
                   >
-                    <img src={imgUrl} alt={`${product.name} view ${idx + 1}`} className="w-full h-full object-cover" />
+                    <ImagePlaceholder src={imgUrl} alt={`${product.name} view ${idx + 1}`} className="w-full h-full" aspectRatio="1/1" />
                   </button>
                 ))}
               </div>
@@ -150,7 +150,7 @@ export default function ProductDetailPage() {
                 disabled={!isAvailable}
                 onClick={() => {
                   if (!customerId) {
-                    window.location.href = `/login?redirect=/products/${product.id}`
+                    navigate(`/login?next=/products/${product.id}`)
                     return
                   }
                   setIsModalOpen(true)

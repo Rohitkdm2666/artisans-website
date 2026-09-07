@@ -2,10 +2,9 @@ import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Container } from '@/components/ui/Container'
 import { LoadingState } from '@/components/ui/LoadingState'
-import { EmptyState } from '@/components/ui/EmptyState'
 import { ProductCard } from '@/components/ui/ProductCard'
 import { Button } from '@/components/ui/Button'
-import { ArrowLeft, AlertCircle, MapPin, Award, Package, MessageCircle } from 'lucide-react'
+import { ArrowLeft, AlertCircle, MapPin, Award, MessageCircle } from 'lucide-react'
 import { useArtisanDetail } from '@/hooks/useArtisans'
 import { useArtisanProducts } from '@/hooks/useProducts'
 import { getArtisanImageUrl } from '@/lib/storage'
@@ -92,9 +91,9 @@ export default function ArtisanDetailPage() {
         <div className="lg:col-span-2">
           <h2 className="font-serif text-3xl text-gray-900 mb-6">The Story</h2>
           <div className="prose prose-lg text-gray-700 font-sans leading-relaxed">
-            {story?.content ? (
+            {story?.approved_story || story?.generated_story || story?.source_text ? (
               // If we have a rich story, render it
-              <p className="whitespace-pre-wrap">{story.content}</p>
+              <p className="whitespace-pre-wrap">{story.approved_story || story.generated_story || story.source_text}</p>
             ) : (
               // Fallback to craft_summary
               <p className="whitespace-pre-wrap">{profile.craft_summary || "This artisan's detailed story is being documented."}</p>
@@ -143,7 +142,7 @@ export default function ArtisanDetailPage() {
       </Container>
 
       {/* Artisan Products Collection */}
-      <section className="bg-white py-16 border-t border-[#e5d8c8]">
+      <section className="bg-surface py-16 border-t border-[#e5d8c8]">
         <Container>
           <div className="mb-10 text-center">
             <h2 className="font-serif text-3xl text-gray-900 mb-3">Collection by {profile.display_name}</h2>
@@ -153,11 +152,10 @@ export default function ArtisanDetailPage() {
           {productsStatus === 'loading' && <LoadingState message="Loading collection..." />}
 
           {productsStatus === 'success' && products.length === 0 && (
-            <EmptyState
-              icon={<Package size={28} />}
-              title="No Products Available"
-              description={`${profile.display_name} doesn't have any published products at the moment.`}
-            />
+            <div className="py-20 text-center">
+              <h3 className="font-serif text-2xl text-gray-700 mb-2">No Products Available</h3>
+              <p className="text-gray-500">{profile.display_name} doesn't have any published products at the moment.</p>
+            </div>
           )}
 
           {productsStatus === 'success' && products.length > 0 && (

@@ -143,7 +143,7 @@ export default function ProfilePage() {
               {!enquiriesLoading && enquiries.length === 0 && (
                 <div className="text-center py-16 bg-white rounded-lg border border-gray-200">
                   <MessageCircle size={40} className="mx-auto mb-4 text-gray-300" />
-                  <h3 className="font-serif text-xl text-gray-700 mb-2">No Enquiries Yet</h3>
+                  <h3 className="font-serif text-xl text-gray-700 mb-2">Your conversations with artisans will appear here.</h3>
                   <p className="text-gray-500 text-sm mb-6">Browse products and contact artisans to get started.</p>
                   <Link to="/products">
                     <Button variant="outline">Browse Products</Button>

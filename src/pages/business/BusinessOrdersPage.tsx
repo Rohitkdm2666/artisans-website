@@ -56,7 +56,7 @@ export default function BusinessOrdersPage() {
                     )}
                   </div>
                   <Link
-                    to={`/business/requests/${order.bulk_order_request_id}`}
+                    to="/business/requests"
                     className="text-xs text-maroon-700 uppercase tracking-wider font-medium hover:underline flex items-center gap-1 flex-shrink-0"
                   >
                     View Request <ChevronRight size={12} />

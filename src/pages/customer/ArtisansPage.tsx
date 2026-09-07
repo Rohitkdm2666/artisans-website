@@ -10,12 +10,12 @@ export default function ArtisansPage() {
   const { artisans, status, error } = usePublicArtisans()
 
   return (
-    <div className="section min-h-screen">
+    <div className="pt-6 pb-16 min-h-screen">
       <Container>
         <SectionHeading
           title="Meet Our Artisans"
-          subtitle="Behind every product is a person with a skill honed over a lifetime. Explore the communities and craftspeople we work with."
-          className="mb-12"
+          className="mb-6"
+          ornament={false}
         />
 
         {status === 'loading' && <LoadingState message="Loading artisan directory..." />}
@@ -24,7 +24,7 @@ export default function ArtisansPage() {
           <div className="py-12 text-center text-red-700">
             <AlertCircle size={48} className="mx-auto mb-4 opacity-50" />
             <h3 className="font-serif text-2xl mb-2">Something went wrong</h3>
-            <p>{error}</p>
+            <p>{typeof error === 'string' ? error : JSON.stringify(error)}</p>
           </div>
         )}
 
@@ -37,7 +37,7 @@ export default function ArtisansPage() {
         )}
 
         {status === 'success' && artisans.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {artisans.map((artisan) => (
               <ArtisanCard key={artisan.id} artisan={artisan} />
             ))}

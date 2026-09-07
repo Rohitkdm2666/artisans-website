@@ -3,9 +3,9 @@ import { Card, CardBody, CardImage } from '@/components/ui/Card'
 import { getProductImageUrl } from '@/lib/storage'
 import type { ProductWithDetails } from '@/types'
 
-export function ProductCard({ product }: { product: ProductWithDetails }) {
+export function ProductCard({ product, hrefPrefix = '/products' }: { product: ProductWithDetails; hrefPrefix?: string }) {
   const imageUrl = getProductImageUrl(
-    product.primary_image?.thumbnail_path || product.primary_image?.original_path
+    product.primary_image?.thumbnail_path || product.primary_image?.enhanced_path || product.primary_image?.original_path
   )
 
   // Calculate availability conceptually
@@ -13,7 +13,7 @@ export function ProductCard({ product }: { product: ProductWithDetails }) {
   const isAvailable = qty > 0
 
   return (
-    <Link to={`/products/${product.id}`} className="block no-underline group">
+    <Link to={`${hrefPrefix}/${product.id}`} className="block no-underline group">
       <Card elevated className="h-full transition-transform duration-300 hover:-translate-y-1">
         <CardImage
           src={imageUrl}
@@ -57,7 +57,7 @@ export function ProductCard({ product }: { product: ProductWithDetails }) {
               marginTop: '0.25rem',
             }}
           >
-            By {product.artisan?.display_name || 'Hastakala Artisan'}
+            By {product.artisan?.display_name || 'Dor Artisan'}
           </p>
 
           <div className="mt-auto pt-4 flex justify-between items-center border-t" style={{ borderColor: 'var(--color-border)' }}>

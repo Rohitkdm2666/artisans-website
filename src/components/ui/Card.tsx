@@ -38,6 +38,9 @@ interface CardImageProps {
 }
 
 export function CardImage({ src, alt, aspectRatio = '4/3', className = '' }: CardImageProps) {
+  const [hasError, setHasError] = React.useState(false)
+  const showPlaceholder = !src || hasError
+
   const ratioStyle: React.CSSProperties = {
     aspectRatio,
     backgroundColor: 'var(--color-bg-muted)',
@@ -46,12 +49,13 @@ export function CardImage({ src, alt, aspectRatio = '4/3', className = '' }: Car
 
   return (
     <div style={ratioStyle} className={`relative w-full ${className}`}>
-      {src ? (
+      {!showPlaceholder ? (
         <img
-          src={src}
+          src={src as string}
           alt={alt}
-          className="w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
           style={{ borderRadius: 0 }}
+          onError={() => setHasError(true)}
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center">

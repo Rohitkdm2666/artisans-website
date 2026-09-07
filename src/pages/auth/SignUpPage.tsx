@@ -122,7 +122,7 @@ export default function SignUpPage() {
                 lineHeight:    1,
               }}
             >
-              Hastakala
+              Dor
             </p>
             <p
               style={{
@@ -132,7 +132,7 @@ export default function SignUpPage() {
                 textTransform: 'uppercase',
               }}
             >
-              हस्तकला
+              डोर
             </p>
           </Link>
           <p

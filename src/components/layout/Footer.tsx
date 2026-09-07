@@ -22,7 +22,7 @@ const FOOTER_LINKS = {
 const SOCIAL = [
   { label: 'Website', icon: Globe, href: '#' },
   { label: 'Social', icon: AtSign, href: '#' },
-  { label: 'Email Us', icon: Mail, href: 'mailto:hello@hastakala.in' },
+  { label: 'Email Us', icon: Mail, href: 'mailto:hello@dor.in' },
 ]
 
 export function Footer() {
@@ -40,7 +40,7 @@ export function Footer() {
 
           {/* Brand column */}
           <div className="md:col-span-1 flex flex-col gap-4">
-            <Link to="/" style={{ textDecoration: 'none' }} aria-label="Hastakala Home">
+            <Link to="/" style={{ textDecoration: 'none' }} aria-label="Dor Home">
               <div>
                 <p
                   className="font-serif"
@@ -52,7 +52,7 @@ export function Footer() {
                     letterSpacing: '-0.02em',
                   }}
                 >
-                  Hastakala
+                  Dor
                 </p>
                 <p
                   style={{
@@ -64,7 +64,7 @@ export function Footer() {
                     marginTop: '2px',
                   }}
                 >
-                  हस्तकला
+                  डोर
                 </p>
               </div>
             </Link>
@@ -143,7 +143,7 @@ export function Footer() {
           }}
         >
           <p>
-            © {new Date().getFullYear()} Hastakala. All rights reserved.
+            © {new Date().getFullYear()} Dor. All rights reserved.
           </p>
           <p style={{ letterSpacing: '0.04em' }}>
             Crafted with respect for Indian heritage.

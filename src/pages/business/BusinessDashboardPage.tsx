@@ -35,7 +35,7 @@ export default function BusinessDashboardPage() {
       <Container>
         <SectionHeading
           title="Business Dashboard"
-          subtitle="Welcome to the Hastakala B2B portal. Source authentic Indian craft at scale."
+          subtitle="Welcome to the Dor B2B portal. Source authentic Indian craft at scale."
           className="mb-12"
           align="left"
           ornament={false}

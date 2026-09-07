@@ -103,7 +103,7 @@ export default function LoginPage() {
                 lineHeight:    1,
               }}
             >
-              Hastakala
+              Dor
             </p>
             <p
               style={{
@@ -113,7 +113,7 @@ export default function LoginPage() {
                 textTransform: 'uppercase',
               }}
             >
-              हस्तकला
+              डोर
             </p>
           </Link>
 

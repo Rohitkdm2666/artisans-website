@@ -38,11 +38,14 @@ export interface ArtisanProfile {
 export interface ArtisanStory {
   id: string
   artisan_profile_id: string
-  title: string | null
-  content: string
-  images: string[]
+  source_text: string | null
+  generated_story: string | null
+  approved_story: string | null
+  source_language: string
+  is_published: boolean
   created_at: string
   updated_at: string
+  deleted_at: string | null
 }
 
 // --- Catalog ---
